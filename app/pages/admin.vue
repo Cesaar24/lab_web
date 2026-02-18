@@ -1,12 +1,7 @@
 <template>
-  <div class="admin">
+  <div class="container mx-auto min-h-screen">
     <h1>Welcome to the admin</h1>
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
-      consequatur quidem quasi quaerat inventore non doloribus quia temporibus
-      exercitationem deserunt. Eos est animi reiciendis eligendi, quis deserunt
-      aliquid consequatur minima. Lorem
-    </p>
+    <p>Esta es una ruta protegida solo para admin</p>
   </div>
 </template>
 <script setup>
@@ -15,8 +10,4 @@ definePageMeta({
   middleware: ["auth", "admin"],
 });
 </script>
-<style scoped>
-.admin {
-  min-height: 100%;
-}
-</style>
+<style scoped></style>

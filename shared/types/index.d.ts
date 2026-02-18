@@ -7,23 +7,23 @@ declare global {
 
   interface User {
     name: string;
-    lastName: string;
-    username: string;
-    password?: string;
+    lastName?: string;
+    username?: string;
+    password: string;
     email: string;
     id: string;
     role: Role;
-    subscription: Subscription;
+    subscription?: Subscription;
+    isAdmin: boolean;
   }
 
   interface userProfileForm {
     id: string;
     name: string;
-    lastName: string;
-    username: string;
     email: string;
-    role: Role;
-    subscription: Subscription;
+    role?: Role;
+    subscription?: Subscription;
+    isAdmin: boolean;
   }
 
   interface UserState {
@@ -33,17 +33,17 @@ declare global {
         ip: string | null;
         infoConnection: object;
       };
-      profile: User | {};
+      profile: userProfileForm | {};
     };
   }
 
   interface UserRegisterForm {
     name: string;
-    lastName: string;
-    username: string;
+    lastName?: string;
+    username?: string;
     password: string;
     email: string;
-    isAdmin: boolean;
+    isAdmin?: boolean;
   }
   interface UserInput {
     email: string;

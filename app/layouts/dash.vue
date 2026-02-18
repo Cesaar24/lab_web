@@ -1,11 +1,7 @@
-<script setup>
-/* import { useTheme } from "vuetify"; */
-/* const theme = useTheme(); */
-
-const { logout } = await useAuth();
-const modal = ref(false);
-const isDarkModeActivated = ref(false);
+<script setup lang="ts">
 const visible = ref(false);
+const userState = computed(() => userStore().getUserProfile as User);
+const { logout } = useAuth();
 const links = ref([
   {
     title: "Home",
@@ -29,17 +25,9 @@ const links = ref([
   },
 ]);
 
-/* const handleDarkMode = () => {
-  isDarkModeActivated.value = !isDarkModeActivated.value;
-  if (isDarkModeActivated.value) {
-    theme.global.name.value = "dark";
-  } else {
-    theme.global.name.value = "light";
-  }
-}; */
-
 const container = ref(null);
-const handleClickOutside = (event) => {
+const handleClickOutside = (event: any) => {
+  /* @ts-ignore */
   if (container.value && !container.value.contains(event.target)) {
     visible.value = false;
   }
@@ -56,7 +44,7 @@ onUnmounted(() => {
   <div class="dash">
     <!-- Header -->
     <header
-      class="relative bg-white/80 backdrop-blur-lg border-b border-gray-200/50 sticky top-0 z-50 shadow-lg shadow-black/5"
+      class="relative bg-white/80 backdrop-blur-lg border-b border-gray-200/50 top-0 z-50 shadow-lg shadow-black/5"
     >
       <div
         class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"
@@ -67,14 +55,15 @@ onUnmounted(() => {
           <!-- Logo -->
           <div class="flex items-center space-x-3 group">
             <div
-              class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105"
+              class="w-10 h-10 bg-gradient-to-br from-[#0093DD] to-[#0093DD]/50 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105"
             >
-              <span class="text-white font-bold text-lg">L</span>
+              <span class="text-white font-bold text-lg">F</span>
             </div>
+
             <span
-              class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              class="text-2xl font-bold bg-gradient-to-r from-[#0093DD] to-[#0093DD]/50 bg-clip-text text-transparent"
             >
-              Logo
+              Facyt
             </span>
           </div>
 
@@ -82,27 +71,27 @@ onUnmounted(() => {
           <div class="hidden md:flex items-center space-x-8">
             <nuxt-link
               to="/dashboard"
-              class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative group"
+              class="text-gray-700 hover:text-[#0093DD] font-medium transition-colors duration-200 relative group"
               >dashboard
               <span
-                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"
+                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0093DD] transition-all duration-300 group-hover:w-full"
               ></span
             ></nuxt-link>
 
             <nuxt-link
               to="/admin"
-              class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative group"
+              class="text-gray-700 hover:text-[#0093DD] font-medium transition-colors duration-200 relative group"
               >Admin
               <span
-                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"
+                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0093DD] transition-all duration-300 group-hover:w-full"
               ></span
             ></nuxt-link>
             <nuxt-link
               to="/guest"
-              class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 relative group"
+              class="text-gray-700 hover:text-[#0093DD] font-medium transition-colors duration-200 relative group"
               >Guest
               <span
-                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"
+                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0093DD] transition-all duration-300 group-hover:w-full"
               ></span
             ></nuxt-link>
           </div>
@@ -116,7 +105,7 @@ onUnmounted(() => {
               >
                 <div class="relative">
                   <div
-                    class="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 overflow-hidden avatar-ring"
+                    class="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center text-[#0093DD] overflow-hidden avatar-ring"
                   >
                     <!-- <img
                       src="../../public/user.png"
@@ -130,10 +119,12 @@ onUnmounted(() => {
                 </div>
                 <div class="hidden lg:flex flex-col items-start">
                   <span
-                    class="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-200"
-                    >John Doe</span
+                    class="text-sm font-medium text-gray-700 group-hover:text-[#0093DD] transition-colors duration-200"
+                    >{{ userState.name }}</span
                   >
-                  <span class="text-xs text-gray-500">Admin</span>
+                  <span class="text-xs text-gray-500">{{
+                    userState.isAdmin ? "Admin" : "Guest"
+                  }}</span>
                 </div>
               </button>
               <div
@@ -143,7 +134,7 @@ onUnmounted(() => {
                 <div class="px-4 py-3 border-b border-gray-100">
                   <div class="flex items-center">
                     <div
-                      class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 overflow-hidden mr-3"
+                      class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-[#0093DD] overflow-hidden mr-3"
                     >
                       <!-- <img
                         src="https://randomuser.me/api/portraits/men/32.jpg"
@@ -152,34 +143,29 @@ onUnmounted(() => {
                       /> -->
                     </div>
                     <div>
-                      <p class="font-medium text-gray-900">John Doe</p>
-                      <p class="text-sm text-gray-500">john@example.com</p>
+                      <p class="font-medium text-gray-900">
+                        {{ userState.name }}
+                      </p>
+                      <p class="text-sm text-gray-500">{{ userState.email }}</p>
                     </div>
                   </div>
                 </div>
                 <nuxt-link
                   to="/profile"
-                  class="block px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-600 flex items-center transition-colors duration-200"
+                  class="px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-[#0093DD] flex items-center transition-colors duration-200"
                 >
                   Mi Perfil
                 </nuxt-link>
 
                 <div class="border-t border-gray-100 my-1"></div>
-                <a
-                @click="logout"
-                  href="#"
-                  class="block px-4 py-2.5 text-gray-700 hover:bg-blue-50 hover:text-blue-600 flex items-center transition-colors duration-200"
+                <span
+                  @click="logout"
+                  class="px-4 py-2.5 cursor-pointer text-gray-700 hover:bg-blue-50 hover:text-[#0093DD] flex items-center transition-colors duration-200"
                 >
                   Sign out
-                </a>
+                </span>
               </div>
             </div>
-
-            <!--  <button
-              class="hidden md:block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
-            >
-              Get Started
-            </button> -->
 
             <!-- Mobile menu button -->
             <button
@@ -202,45 +188,9 @@ onUnmounted(() => {
             </button>
           </div>
         </div>
-
-        <!-- Mobile Navigation -->
-        <!--  <div
-          id="mobile-menu"
-          class="md:hidden hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-gray-200/50 shadow-lg animate-slide-down"
-        >
-          <div class="px-4 py-6 space-y-4">
-            <a
-              href="#"
-              class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
-              >Home</a
-            >
-            <a
-              href="#"
-              class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
-              >About</a
-            >
-            <a
-              href="#"
-              class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
-              >Services</a
-            >
-            <a
-              href="#"
-              class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
-              >Contact</a
-            >
-            <button
-              class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg mt-4"
-            >
-              Get Started
-            </button>
-          </div>
-        </div> -->
       </nav>
     </header>
-
     <slot />
-
     <!-- <AppFooter /> -->
     <footer class="w-100"><span>@2026</span></footer>
   </div>

@@ -9,5 +9,10 @@ export default defineNuxtConfig({
     tokenSecret: process.env.TOKEN_SECRET,
     tokenExpiration: process.env.TOKEN_EXPIRES,
     clientIdGoogle: process.env.CLIENT_ID_GOOGLE,
+
+    databaseUser: process.env.DATABASE_USER,
+    databasePassword: process.env.DATABASE_PASSWORD,
+    databaseName: process.env.DATABASE_NAME,
+    databaseHost: process.env.DATABASE_HOST,
   },
 });

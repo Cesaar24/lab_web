@@ -7,7 +7,7 @@ export const userStore = defineStore("userStore", {
         ip: null as String | null,
         infoConnection: {},
       },
-      profile: {} as User | {},
+      profile: {} as userProfileForm | {},
     },
   }),
   actions: {
@@ -37,7 +37,7 @@ export const userStore = defineStore("userStore", {
       return state.user.credentials.ip;
     },
     isAdmin(state) {
-      return (state.user.profile as User).role === "Admin";
+      return (state.user.profile as User).isAdmin;
     },
   },
 });

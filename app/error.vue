@@ -12,11 +12,6 @@
 <script setup lang="ts">
 import type { NuxtError } from "#app";
 
-// layouts/dash.vue
-definePageMeta({
-  layout: "dash",
-});
-
 const props = defineProps({
   error: Object as () => NuxtError,
 });

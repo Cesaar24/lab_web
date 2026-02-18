@@ -1,28 +1,26 @@
 export const useAuth = () => {
   const login = async (user: UserInput) => {
     try {
-      console.log("data:",user)
       const data = await $fetch("/api/user/login", {
         method: "POST",
         body: user,
       });
-      
+
       const userState = userStore();
       userState.setUser(data);
       navigateTo("/dashboard");
       /*  return data */
     } catch (err: any) {
-      console.log("err:",err.message) 
+      console.log("err:", err.message);
       throw err;
     }
   };
   const logout = async () => {
     try {
-      const data = await $fetch("/api/user/logout");
+      await $fetch("/api/user/logout");
       const userState = userStore();
       userState.logout();
-      navigateTo("/login");
-
+      return navigateTo("/login");
       /*  return data */
     } catch (err: any) {
       throw err;
