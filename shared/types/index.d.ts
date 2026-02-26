@@ -14,7 +14,6 @@ declare global {
     id: string;
     role: Role;
     subscription?: Subscription;
-    isAdmin: boolean;
   }
 
   interface userProfileForm {
@@ -23,7 +22,6 @@ declare global {
     email: string;
     role?: Role;
     subscription?: Subscription;
-    isAdmin: boolean;
   }
 
   interface UserState {
@@ -43,7 +41,6 @@ declare global {
     username?: string;
     password: string;
     email: string;
-    isAdmin?: boolean;
   }
   interface UserInput {
     email: string;

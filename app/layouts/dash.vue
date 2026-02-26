@@ -2,29 +2,6 @@
 const visible = ref(false);
 const userState = computed(() => userStore().getUserProfile as User);
 const { logout } = useAuth();
-const links = ref([
-  {
-    title: "Home",
-    path: "/",
-  },
-  {
-    title: "Dashboard",
-    path: "/",
-  },
-  {
-    title: "Admin",
-    path: "/",
-  },
-  {
-    title: "Users",
-    path: "/",
-  },
-  {
-    title: "Guests",
-    path: "/",
-  },
-]);
-
 const container = ref(null);
 const handleClickOutside = (event: any) => {
   /* @ts-ignore */
@@ -87,9 +64,9 @@ onUnmounted(() => {
               ></span
             ></nuxt-link>
             <nuxt-link
-              to="/guest"
+              to="/user"
               class="text-gray-700 hover:text-[#0093DD] font-medium transition-colors duration-200 relative group"
-              >Guest
+              >User
               <span
                 class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0093DD] transition-all duration-300 group-hover:w-full"
               ></span
@@ -123,7 +100,7 @@ onUnmounted(() => {
                     >{{ userState.name }}</span
                   >
                   <span class="text-xs text-gray-500">{{
-                    userState.isAdmin ? "Admin" : "Guest"
+                    userState.role
                   }}</span>
                 </div>
               </button>

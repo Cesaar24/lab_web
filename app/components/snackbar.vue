@@ -8,10 +8,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  messagge: {
+    type: String,
+    default: "",
+  },
 });
 
 const emit = defineEmits(["update"]);
-watch(
+/* watch(
   () => props.show,
   (newPath, oldPath) => {
     if (newPath) {
@@ -20,7 +24,7 @@ watch(
       }, 2000);
     }
   },
-);
+); */
 </script>
 <template>
   <div v-if="show" class="flex flex-col gap-3">
@@ -43,9 +47,9 @@ watch(
       </svg>
       <div class="ml-3">
         <div class="font-bold text-left text-black">
-          Your entry has been saved
+          {{ messagge || "Your entry has been saved!" }}
         </div>
-        <div class="w-full text-gray-900 mt-1">You can continue browsing.</div>
+        <!-- <div class="w-full text-gray-900 mt-1">You can continue browsing.</div> -->
       </div>
     </div>
     <div
@@ -67,11 +71,11 @@ watch(
       </svg>
       <div class="ml-3">
         <div class="font-bold text-left text-black">
-          Your entry could not be saved
+          {{ messagge || "Your entry has been saved!" }}
         </div>
-        <div class="w-full text-gray-900 mt-1">
+        <!--  <div class="w-full text-gray-900 mt-1">
           You don&#x27;t have access to this page.
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

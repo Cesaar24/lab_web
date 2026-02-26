@@ -1,3 +1,5 @@
+import { da } from "zod/locales";
+
 export const useAuth = () => {
   const login = async (user: UserInput) => {
     try {
@@ -7,8 +9,8 @@ export const useAuth = () => {
       });
 
       const userState = userStore();
-      userState.setUser(data);
-      navigateTo("/dashboard");
+      /*  userState.setUser(data); */
+      /* navigateTo("/dashboard"); */
       /*  return data */
     } catch (err: any) {
       console.log("err:", err.message);
@@ -33,7 +35,7 @@ export const useAuth = () => {
         body: user,
       });
       const userState = userStore();
-      userState.setUser(data.user);
+      /*  userState.setUser(data.user); */
       navigateTo("/dashboard");
       /*  return data */
     } catch (err: any) {
@@ -50,7 +52,7 @@ export const useAuth = () => {
       /* console.log("Data:",data) */
       if (data) {
         const userState = userStore();
-        userState.setUser(data.user);
+        /* userState.setUser(data.user); */
         navigateTo("/dashboard");
       }
 
@@ -61,13 +63,22 @@ export const useAuth = () => {
   };
   const authenticate = async () => {
     const userState = userStore();
+    const { csrf } = useCsrf();
     if (!userState.$state.user.credentials.logged) {
-      const data = await $fetch("/api/user/token", {
-        headers: useRequestHeaders(["cookie"]),
-      });
-
-      if (data.user) {
-        userState.setUser(data.user);
+      try {
+        const data = (await $fetch("/api/user_mysql/getUserToken", {
+          method: "POST",
+          headers: {
+            "csrf-token": csrf,
+          },
+        })) as { success: boolean; user: userProfileForm; token: string };
+        if (data.success) {
+          userState.setUser(data.user, data.token);
+        }
+        return true;
+      } catch (err) {
+        console.error("Error en authenticate:", err);
+        return false;
       }
     }
   };
@@ -80,7 +91,7 @@ export const useAuth = () => {
       });
       // console.log("data:", data);
       const userState = userStore();
-      userState.setUser(data.user);
+      /* userState.setUser(data.user); */
 
       return data;
     } catch (err) {

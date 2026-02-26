@@ -9,11 +9,14 @@ export const userStore = defineStore("userStore", {
       },
       profile: {} as userProfileForm | {},
     },
+    accessToken: null as string | null,
+    blocked: false,
   }),
   actions: {
-    setUser(userToken: User) {
+    setUser(userToken: userProfileForm, token: string) {
       this.user.profile = { ...userToken };
       this.user.credentials.logged = true;
+      this.accessToken = token;
     },
     setCredentials(info: object) {
       if (typeof info === "object" && info !== null) {
@@ -24,6 +27,7 @@ export const userStore = defineStore("userStore", {
     logout() {
       this.user.profile = {};
       this.user.credentials.logged = false;
+      this.accessToken = null;
     },
   },
   getters: {
@@ -37,7 +41,7 @@ export const userStore = defineStore("userStore", {
       return state.user.credentials.ip;
     },
     isAdmin(state) {
-      return (state.user.profile as User).isAdmin;
+      return (state.user.profile as User).role === "Admin";
     },
   },
 });

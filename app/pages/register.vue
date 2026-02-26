@@ -1,38 +1,90 @@
 <script setup lang="ts">
+const { authenticate } = useAuth();
+const { csrf } = useCsrf();
+
 definePageMeta({
   /* layout: "dash", */
   middleware: "auth",
 });
-const textError = ref("");
-const snackbar = ref(false);
+
 const userState = userStore();
 /* Data */
-const formu = ref();
 const registerF = ref({
   name: "",
   password: "",
   confirmPassword: "",
   email: "",
-  isAdmin: false,
+});
+const snackbarval = ref({
+  show: false,
+  success: false,
+  message: "",
 });
 
 const submit = async () => {
-  const { confirmPassword, isAdmin, ...dataSend } = registerF.value;
+  const { confirmPassword, ...dataSend } = registerF.value;
+  /* Validaciones del lado del cliente */
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(registerF.value.email)) {
+    snackbarval.value = {
+      show: true,
+      success: false,
+      message: "Por favor, ingresa un correo electrónico válido.",
+    };
+    return;
+  }
+  const nameRegex = /^[a-zA-Z\s]+$/;
+  if (
+    registerF.value.name.trim() === "" ||
+    registerF.value.name.length < 3 ||
+    !nameRegex.test(registerF.value.name)
+  ) {
+    snackbarval.value = {
+      show: true,
+      success: false,
+      message: "Por favor, ingresa un nombre válido.",
+    };
+    return;
+  }
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordRegex.test(registerF.value.password)) {
+    snackbarval.value = {
+      show: true,
+      success: false,
+      message:
+        "La contraseña debe tener al menos 8 caracteres. (min: 1 letra minúscula, min: 1 letra mayúscula , min:1 digito)",
+    };
+    return;
+  }
+  if (registerF.value.password !== registerF.value.confirmPassword) {
+    snackbarval.value = {
+      show: true,
+      success: false,
+      message: "Las contraseñas no coinciden.",
+    };
+    return;
+  }
+  /*  */
+
   try {
-    const response = await $fetch("/api/user_mysql/register", {
+    const response = (await $fetch("/api/user_mysql/register", {
       method: "POST",
       body: dataSend,
-    });
+      headers: {
+        "csrf-token": csrf,
+      },
+    })) as { success: boolean; data: userProfileForm };
     if (response.success) {
-      userState.setUser(response.data);
+      /* userState.setUser(response.data, response.accessToken); */
+      await authenticate();
     }
-  } catch (err: any) {
-    textError.value = err.statusMessage;
-    snackbar.value = true;
-    console.error("Register err", err);
-    return;
-  } finally {
     await navigateTo("/dashboard");
+  } catch (err: any) {
+    snackbarval.value = {
+      show: true,
+      success: false,
+      message: err.statusMessage || "Error al registrar",
+    };
   }
 };
 </script>
@@ -82,20 +134,7 @@ const submit = async () => {
             class="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-[#0093DD] shadow-sm rounded-lg"
           />
         </div>
-        <div class="flex items-center justify-between text-sm">
-          <div class="flex items-center gap-x-3">
-            <input
-              type="checkbox"
-              id="remember-me-checkbox"
-              class="checkbox-item peer hidden"
-            />
-            <label
-              for="remember-me-checkbox"
-              class="relative flex w-5 h-5 bg-white peer-checked:bg-[#0093DD] rounded-md border ring-offset-2 ring-[#0093DD] duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
-            ></label>
-            <span>Remember me</span>
-          </div>
-        </div>
+
         <button
           class="w-full px-4 py-2 text-white font-medium bg-[#0093DD] hover:bg-[#0093DD]/90 active:bg-[#0093DD] rounded-lg duration-150"
           type="submit"
@@ -103,16 +142,6 @@ const submit = async () => {
           Registrar
         </button>
       </form>
-      <!-- <button
-        class="w-full flex items-center justify-center gap-x-3 py-2.5 border rounded-lg text-sm font-medium hover:bg-gray-50 duration-150 active:bg-gray-100"
-      >
-        <img
-          src="https://raw.githubusercontent.com/sidiDev/remote-assets/7cd06bf1d8859c578c2efbfda2c68bd6bedc66d8/google-icon.svg"
-          alt="Google"
-          class="w-5 h-5"
-        />
-        Continue with Google
-      </button> -->
       <p class="text-center">
         Ya tienes cuenta
         <nuxt-link
@@ -122,6 +151,11 @@ const submit = async () => {
         >
       </p>
     </div>
+    <snackbar
+      :show="snackbarval.show"
+      :success="snackbarval.success"
+      :messagge="snackbarval.message"
+    ></snackbar>
   </div>
 </template>
 
